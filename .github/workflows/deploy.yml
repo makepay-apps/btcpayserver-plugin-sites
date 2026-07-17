@@ -1,0 +1,51 @@
+name: Deploy production sites
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/deploy.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-sites-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - makepay-events
+          - makepay-downloads
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Link Vercel project
+        run: >-
+          npx --yes vercel@latest link
+          --yes
+          --scope wemine
+          --project "${{ matrix.project }}"
+          --token "${{ secrets.VERCEL_TOKEN }}"
+      - name: Deploy to production
+        run: >-
+          npx --yes vercel@latest deploy
+          --prod
+          --yes
+          --scope wemine
+          --token "${{ secrets.VERCEL_TOKEN }}"
