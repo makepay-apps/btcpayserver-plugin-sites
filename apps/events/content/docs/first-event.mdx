@@ -1,0 +1,52 @@
+---
+title: Create your first event
+description: Configure an event, ticket inventory, admission rules, and publication state.
+section: Getting started
+order: 3
+---
+
+An event is the boundary for ticket inventory, POS, public sales, and scanner access. Create separate events when schedules, venues, admission teams, or scanner credentials should differ.
+
+## Event essentials
+
+From **Event Tickets**, choose **Add event** and enter:
+
+- A clear public name and unique URL slug.
+- Start and end times in the intended event timezone.
+- Venue name and address.
+- Public description and hero presentation.
+- Draft or published visibility.
+
+A draft remains available to administrators but cannot be purchased from the public storefront. Publish only after ticket inventory, checkout, delivery, and legal links are ready.
+
+## Define ticket types
+
+Each ticket type has its own name, price, capacity, availability, and quantity constraints. Common structures include general admission, early-bird, VIP, workshop add-ons, or a group package.
+
+| Setting | Purpose |
+| --- | --- |
+| Price and currency | Amount used when the order and BTCPay invoice are created |
+| Capacity | Maximum number available for the ticket type |
+| Per-order limit | Prevents one cart from taking excessive inventory |
+| Published | Controls whether customers can select the type |
+| Description | Explains access, benefits, or restrictions |
+
+Historical orders keep their captured line and invoice values even if the ticket type is later edited. This is why the order detail page is the correct source for past transaction review.
+
+## Configure admission rules
+
+Enable **Require photo ID check at admission** when door staff must compare the attendee with an identification document. The scanner does not process or store an ID image. Instead, the staff member records either a confirmed or rejected decision before check-in.
+
+A rejected decision does not admit the attendee. Confirmation and rejection totals are audited per ticket, while check-out never forces a second ID decision.
+
+## Test before publishing
+
+Use a draft or low-price test event to verify:
+
+1. Ticket selection and capacity messages.
+2. Cart totals, buyer fields, and attendee fields.
+3. BTCPay modal opening and invoice status updates.
+4. Paid confirmation, PDF, email, and wallet actions.
+5. Scanner lookup, check-in, check-out, and re-entry.
+
+Continue with [Live storefront editor](/docs/live-editor) to shape the complete public journey.

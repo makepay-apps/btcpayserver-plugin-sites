@@ -1,0 +1,44 @@
+---
+title: Checkout and attendee details
+description: Configure the cart, reservation timer, buyer fields, attendee records, promotions, and rebuy behavior.
+section: Storefront and checkout
+order: 5
+---
+
+The checkout separates the purchaser from the people attending. Billing data applies to the order, while attendee data is captured once for each issued ticket.
+
+## Reservation and cart
+
+Selecting tickets creates a cart with quantity, price, and total information. Continuing creates a server-side reservation that temporarily holds inventory. The configured reservation length can be shown as a countdown so customers understand how long the allocation remains available.
+
+Promotional pricing is applied before invoice creation. The cart and final order retain the captured discount context for later review.
+
+## Buyer fields
+
+The buyer always supplies the information required for delivery. Settings can additionally require phone and country or collect company details. Terms and privacy links can be shown alongside an attendee notice and checkout consent.
+
+Keep collection proportional to the event. Every additional required field increases friction and expands the personal data the server must protect.
+
+## Per-ticket attendee fields
+
+For each selected ticket, the customer completes the configured attendee fields. Records can include:
+
+- First and last name.
+- Nickname or badge name.
+- Delivery email and phone.
+- Country and company.
+- Additional event-specific selections exposed by the checkout.
+
+The order detail page keeps attendee snapshots even when the public event or ticket type later changes.
+
+## Local browser recovery
+
+The checkout stores a draft of buyer and attendee values in the customer's browser so an expired reservation can be purchased again without retyping every field. This is a convenience copy in that browser, not an authenticated account or a server-side customer profile.
+
+On an ended reservation, **Rebuy** starts a new ticket selection and can repopulate the saved form data. Inventory and prices are always revalidated; a previous reservation does not guarantee availability.
+
+## Avoid duplicate submissions
+
+Submission controls enter a visible processing state and are disabled while the server request is pending. The server still enforces idempotent state transitions because browser UI alone cannot prevent network retries or multiple tabs.
+
+Continue with [BTCPay payment modal](/docs/payment-modal) for the invoice handoff.

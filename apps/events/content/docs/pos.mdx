@@ -1,0 +1,34 @@
+---
+title: Event point of sale
+description: Use the event-specific POS for staff sales while preserving inventory and BTCPay payment state.
+section: Admissions
+order: 13
+---
+
+Each event provides a focused point-of-sale entry point for staff. POS orders share the same event, ticket types, inventory, invoices, fulfillment, and reporting as public web sales.
+
+## When to use POS
+
+Use the event POS for an in-person box office, registration desk, or authorized sales device. It is not the admission scanner: POS creates orders, while the scanner changes the door state of already issued tickets.
+
+## Create a sale
+
+1. Open the event dashboard and choose **POS** for the intended event.
+2. Select currently available ticket types and quantities.
+3. Capture the buyer and attendee details required by store settings.
+4. Create the BTCPay invoice and complete payment.
+5. Confirm the order reaches paid fulfillment before handing over the ticket.
+
+Capacity and quantity rules apply to POS just as they do to the public cart. Staff cannot rely on a stale browser screen when another sales channel is using the same inventory.
+
+## Delivery at the desk
+
+When the customer provides an email address, normal delivery can send the protected order link and PDF. The staff device can also open the fulfilled order page so the customer can use or save the ticket immediately.
+
+Do not expose the admin dashboard or scanner credential on a customer-facing display. Use only the customer-safe order page for handoff.
+
+## Reporting
+
+Order details identify POS mode separately from online checkout. This lets operators distinguish the channel without maintaining a second inventory or settlement report.
+
+Before opening a busy box office, test the POS on the actual device, network, printer workflow, and enabled BTCPay payment methods.

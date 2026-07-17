@@ -1,0 +1,54 @@
+---
+title: Product editor
+description: Configure listing copy, media, pricing, protected content, previews, publication, and delivery policy in the BTCPay-native editor.
+section: Catalog and storefront
+order: 6
+---
+
+## Create the listing
+
+Open **Digital Products → Add product** and choose a product format first. The format controls which preview, playback, and delivery settings appear. Changing the type later can alter the public experience, so confirm the content model before accepting orders.
+
+Complete the public listing:
+
+- product name and unique slug;
+- short summary for cards and a full description for the detail page;
+- publisher or creator label when relevant;
+- price, optional comparison price, and storefront currency;
+- cover art and category assignment;
+- publication status and featured placement.
+
+Use a stable slug after launch. Existing links and analytics references may point to it even though fulfillment itself is associated with stored product and order identifiers.
+
+## Attach protected content
+
+Select one source mode: local protected upload, private S3-compatible object, or authenticated custom URL. The editor's upload component shows the selected file and replacement state without exposing server storage paths.
+
+For remote storage, configure only the minimum read access required. Never use a bucket-wide write credential when a read-only object or prefix policy is sufficient. For custom origins, use a dedicated authorization header rather than a personal credential reused elsewhere.
+
+The original content is not placed in public HTML. Delivery is authorized and proxied by the server after the order reaches the configured payment state.
+
+## Configure public previews
+
+Previews are separate assets and intentionally public. The editor adapts to the format:
+
+- PDF sample for an ebook;
+- demo track for audio;
+- trailer for video;
+- derived gallery images for photos and art;
+- cover or illustration for a general file;
+- marketing copy and cover for a license.
+
+Keep demos under the 95 MB upload limit. For a photo gallery, verify the generated dimensions and watermark position at the storefront's actual card and detail-page sizes.
+
+## Delivery and publication
+
+Set the per-product download limit and link lifetime where available. Store defaults are a starting point; high-value assets may warrant a shorter lifetime or lower count. First-IP locking can reduce casual sharing, but it may inconvenience customers moving between mobile, office, and home networks.
+
+Unpublished products remain manageable by administrators but cannot be purchased from the public storefront. Before publishing, use the product-detail preview and run a checkout with the actual payment-state policy.
+
+## Editing after sales
+
+Catalog changes affect future presentations and checkouts. Fulfillment configuration is snapshotted for orders so a later source change does not redirect an existing purchase to unrelated content.
+
+When replacing a master file, decide whether existing buyers should keep the captured version or receive the revised asset. Do not assume editing the current product retroactively rewrites every order. Use the admin [Order details](/docs/order-details) view to confirm the snapshot and delivery state for a specific buyer.

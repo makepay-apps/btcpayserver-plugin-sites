@@ -1,0 +1,61 @@
+---
+title: License verification API
+description: Integrate verify, activate, deactivate, and heartbeat endpoints with custom headers, HMAC signatures, nonces, and replay protection.
+section: Licenses and integrations
+order: 14
+---
+
+## Endpoints
+
+The store-scoped license API exposes four actions:
+
+```text
+POST /api/v1/stores/{storeId}/licenses/verify
+POST /api/v1/stores/{storeId}/licenses/activate
+POST /api/v1/stores/{storeId}/licenses/deactivate
+POST /api/v1/stores/{storeId}/licenses/heartbeat
+```
+
+`verify` checks the entitlement and policy. `activate` associates an installation identifier while enforcing the maximum. `deactivate` removes the relevant installation. `heartbeat` records an existing activation's continued use without allocating a new slot.
+
+Use HTTPS and keep all API secrets in the application backend or a protected native application secret store. A secret embedded in public browser JavaScript is not secret.
+
+## Custom headers
+
+The plugin allows configurable request headers beginning with `X-`. This supports a product-specific integration contract without accepting arbitrary sensitive standard headers. Keep header names stable after clients ship and rotate their values using an overlap window you control.
+
+Do not log complete license keys or authentication header values. Redact them at the reverse proxy, application, telemetry, and support layers.
+
+## Request signing
+
+HMAC-SHA256 signing provides integrity and client authentication. The configured signing contract covers the request inputs expected by the plugin, including timestamp and nonce material. Sign the exact canonical representation documented in the license settings shown by your installed release; changes in whitespace, encoding, or field order can produce a different digest.
+
+The server uses constant-time signature comparison. Requests outside the allowed timestamp window or with a replayed nonce are rejected. Generate a fresh cryptographically random nonce for every signed request and synchronize client clocks with a reliable time source.
+
+## Response handling
+
+Responses can also be signed so a client can distinguish a valid server result from a forged local response. Verify the signature before trusting license status, activation limits, or expiry. Treat transport success separately from license success: an HTTP response can be correctly signed while reporting an expired, revoked, or over-limit entitlement.
+
+Bound retry behavior. Repeated rapid activation calls can consume rate limits and make a temporary network fault worse. Cache only the minimum state allowed by your product policy and define an explicit offline grace period if the application must operate without the server.
+
+## Activation identifiers and privacy
+
+Use a stable, application-scoped installation identifier. Do not send hardware serials, full disk identifiers, account passwords, or more device data than necessary. Hash or derive an identifier client-side when that meets your threat model.
+
+The plugin keeps bounded audit history for issuance, verification, activation, deactivation, heartbeat, and failed policy decisions. Review it from the license admin workflow when diagnosing a customer's device limit.
+
+## Integration test plan
+
+Test at least these cases before release:
+
+1. valid verification and first activation;
+2. repeated activation of the same installation;
+3. activation beyond the configured maximum;
+4. deactivation followed by a replacement device;
+5. expired and revoked licenses;
+6. invalid signature, stale timestamp, and repeated nonce;
+7. heartbeat for known and unknown activation identifiers;
+8. response signature verification failure;
+9. store isolation using a license from another store.
+
+Keep the test license separate from production customer records.

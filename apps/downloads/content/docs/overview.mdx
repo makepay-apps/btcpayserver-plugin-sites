@@ -1,0 +1,53 @@
+---
+title: Product overview
+description: Understand the storefront, protected delivery, customer library, and license-management capabilities in one self-hosted BTCPay plugin.
+section: Getting started
+order: 1
+---
+
+## What the plugin provides
+
+MakePay Digital Products turns a BTCPay Server store into a complete digital-commerce system. It combines a public storefront, media-specific product pages, a cart, passwordless customer access, protected fulfillment, and software-license management. The payment is still a native BTCPay invoice; the plugin owns the catalog and fulfillment experience around it.
+
+The supported product formats are:
+
+- file downloads for archives, source files, templates, and general assets;
+- PDF and ebook products with optional public samples and an in-browser reader;
+- music and audio with a demo player and protected stream or download delivery;
+- video with an optional trailer and protected seekable playback;
+- photos and art with derived, downscaled, optionally watermarked previews;
+- software licenses with configurable serial formats, activation limits, and signed APIs.
+
+Products from different formats can share one cart and one checkout. After payment reaches the store's configured fulfillment state, the buyer receives access from a private library and an optional email. A mixed order can therefore unlock a PDF, an audio stream, and a generated license together.
+
+## Where it runs
+
+The plugin runs inside the BTCPay Server process and uses BTCPay's store boundary, database abstractions, invoice lifecycle, SMTP configuration, and authorization policies. There is no MakePay-hosted control plane and no separate merchant account.
+
+Public pages are available from the store-scoped route:
+
+```text
+/stores/<store-id>/downloads
+```
+
+After a server administrator configures a domain mapping, the same experience can be published at a clean hostname route such as:
+
+```text
+https://shop.example.com/downloads
+```
+
+The clean-domain surface includes product pages, previews, cart, sign-in, payment state, purchase history, streams, and protected delivery. Legacy store-scoped routes remain available.
+
+## Admin workflow
+
+Administrators work from **Store → Integrations → Digital Products**. Products and license keys share one BTCPay-native dashboard. Each paid or pending checkout has a dedicated order detail page with customer, invoice, line-item, protected-delivery, usage, email, and license-fulfillment state.
+
+Store settings cover identity, public copy, customer sessions, analytics, delivery policy, storage defaults, and custom-domain guidance. A fullscreen live editor handles the visual storefront: logo, favicon, navigation, announcement bar, hero slides, categories, product selections, colors, and typography.
+
+## Important boundaries
+
+The plugin provides access control, not digital rights management. A customer who can play audio or video can still record it. A public photo watermark discourages casual reuse but is not a substitute for keeping the original private.
+
+Similarly, custom domains require infrastructure work outside the plugin. DNS, TLS certificates, reverse-proxy host acceptance, and `BTCPAY_ADDITIONAL_HOSTS` remain server-owner responsibilities. The plugin adds safe clean-domain routing after BTCPay knows the hostname.
+
+For a production launch, continue with [Requirements](/docs/requirements), [Installation](/docs/installation), and [Security model](/docs/security).

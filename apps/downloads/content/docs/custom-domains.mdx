@@ -1,0 +1,58 @@
+---
+title: Custom domains
+description: Route a branded hostname to the complete Digital Products surface using BTCPay additional hosts, app identity, and domain mapping.
+section: Operations and security
+order: 16
+---
+
+## What the plugin can and cannot do
+
+The plugin supplies clean-domain routes after BTCPay assigns a hostname to the store's Digital Products app identity. It cannot create DNS records, open firewall ports, change an external reverse proxy, or issue certificates by itself.
+
+Use a dedicated hostname such as `shop.example.com` unless an existing proxy can route `/downloads` and every nested path from the apex domain to BTCPay.
+
+## Configure DNS and TLS
+
+Create an A or AAAA record to the BTCPay server, or a CNAME to its public hostname, and wait for it to resolve. Confirm ports 80 and 443 reach BTCPay's reverse proxy.
+
+For the official Docker deployment, preserve every existing additional hostname and add the new one:
+
+```bash
+export BTCPAY_ADDITIONAL_HOSTS="<new-host>,<all-existing-additional-hosts>"
+. ./btcpay-setup.sh -i
+```
+
+Run this from the `btcpayserver-docker` directory as the deployment documentation requires. An unresolved or incorrectly routed hostname can prevent Let's Encrypt renewal for the complete configured host list, including the primary BTCPay domain.
+
+> `BTCPAY_ADDITIONAL_HOSTS` aliases the complete BTCPay Server. It does not isolate one store at the network layer.
+
+## Create the app identity
+
+After DNS and HTTPS work on BTCPay:
+
+1. Open **Store → Integrations → Digital Products**.
+2. Explicitly create a **Digital Products app** identity if the store does not have one.
+3. Sign in as a BTCPay server administrator.
+4. Open **Server settings → Policies → Domain mapping**.
+5. Add the exact normalized ASCII hostname and select the Digital Products app for the intended store.
+
+Internationalized domain names must use their normalized punycode representation. Do not include a scheme, port, whitespace, or trailing dot.
+
+The plugin never creates or mutates app identity during a public request. The mapped request receives BTCPay's `AppData`, and the plugin derives the store only from `AppData.StoreDataId`; a query, form, or route field named `storeId` cannot select another store.
+
+## Verify every public surface
+
+Test the clean URL and nested routes:
+
+```text
+https://shop.example.com/downloads
+https://shop.example.com/downloads/cart
+https://shop.example.com/downloads/login
+https://shop.example.com/downloads/account
+```
+
+Also complete a real test checkout, open the BTCPay JavaScript modal, follow an email link, stream media, and use a protected delivery. If BTCPay runs under a root path such as `/btcpay`, include that prefix.
+
+BTCPay does not reject duplicate domain rows. For the same exact hostname, the first row in the global Policies list wins even if a later entry points to this plugin. Remove or reorder duplicates and use the same normalized form the browser sends.
+
+For official infrastructure references, see BTCPay's documentation for Docker additional hosts, app domain mapping, and external reverse proxy TLS termination.

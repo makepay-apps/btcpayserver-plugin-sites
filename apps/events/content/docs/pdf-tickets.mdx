@@ -1,0 +1,42 @@
+---
+title: PDF tickets
+description: Deliver printable, QR-enabled ticket documents and understand their protected lifecycle.
+section: Ticket delivery
+order: 9
+---
+
+Each paid order can produce a standards-compliant multi-page PDF. Every attendee receives a distinct page and a real QR code tied to that issued ticket.
+
+## Document contents
+
+A ticket page can include:
+
+- Event name, date, time, and venue.
+- Ticket type and attendee identity.
+- A scannable admission QR code.
+- Store and event branding.
+- Instructions or policy copy configured by the operator.
+
+The PDF is available from the protected order page and can be attached to the delivery email. It is not exposed as a predictable public asset URL.
+
+## QR behavior
+
+The QR payload identifies one issued ticket through a protected code. The server stores a one-way hash for matching, while any value that must be recovered for delivery is encrypted at rest.
+
+Printing or taking a screenshot does not create another valid ticket identity. If multiple people present the same QR, the scanner shows the current inside state and entrance history so staff can make an informed decision.
+
+## Multi-attendee orders
+
+An order with several tickets creates one attendee page per issued ticket. Attendee names and ticket types come from the captured order snapshot, not from whatever the event is renamed to later.
+
+## Test the output
+
+Before sales:
+
+1. Download the PDF on desktop and mobile.
+2. Open it in at least two PDF readers.
+3. Print one page at typical office quality.
+4. Scan the printed code from the event's protected scanner.
+5. Confirm that long event, venue, and attendee text does not overlap the QR.
+
+The PDF and wallet passes encode the same ticket identity. Checking in through one representation updates the shared admission state.

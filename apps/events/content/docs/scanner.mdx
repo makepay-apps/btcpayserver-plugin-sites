@@ -1,0 +1,45 @@
+---
+title: Public event scanner
+description: Share, open, rotate, and safely operate the protected mobile scanner for one event.
+section: Admissions
+order: 11
+---
+
+Every event has its own public, mobile-first scanner. It is outside the BTCPay admin layout so door staff get a focused camera experience, but access is protected by an event-scoped capability.
+
+## Share scanner access
+
+On the event dashboard, choose **Scanner**. A share dialog contains:
+
+- A QR code that staff can scan with their device.
+- A copyable protected scanner URL.
+- **Open scanner** for the current device.
+- **Rotate scanner link** inside the same security section.
+
+Treat the URL like a staff credential. Anyone with a valid link can operate admissions for that event.
+
+## Session exchange
+
+Opening a protected link exchanges its query token for a renewable 12-hour HttpOnly cookie scoped to the event's scanner path. The browser immediately redirects to a token-free URL so the credential is less likely to remain in history, screenshots, or copied addresses.
+
+The scanner only accepts tickets issued for its event. It cannot be used as a global lookup across other events or stores.
+
+## Scan methods
+
+The optimized page supports:
+
+- Live device camera scanning.
+- A saved QR image when camera access is unavailable.
+- Manual code entry as an operational fallback.
+
+A scan first performs read-only lookup. It shows validity, ticket type, holder details, current door state, and relevant history. The scan itself does not admit or remove the attendee.
+
+## Result close behavior
+
+After staff complete an action, the result can close automatically after the delay configured in store settings. Five seconds is a practical default. A visible **Close** action immediately returns to a ready scanner for the next guest.
+
+## Rotate compromised access
+
+Rotation invalidates the displayed QR, every previously copied scanner link, and active scanner sessions for that event. Confirm that staff can receive the replacement before rotating during a live admission window.
+
+The scanner is excluded from search indexing and storefront analytics. For the door actions themselves, see [Check-in, check-out, and ID review](/docs/admissions).

@@ -1,0 +1,45 @@
+---
+title: Live storefront editor
+description: Brand the directory and every checkout state with an interactive fullscreen preview.
+section: Storefront and checkout
+order: 4
+---
+
+The live editor provides one workspace for the event directory, ticket selection, cart, attendee checkout, payment, and success states. Changes are previewed without leaving the editor, while saving persists the store's public experience.
+
+## Store identity
+
+Configure the storefront name, logo, logo dimensions, favicon, announcement text, and public description. Use appropriately sized assets so text and navigation do not shift when the image loads.
+
+The browser favicon accepts an absolute HTTP(S) URL to a square ICO, PNG, or SVG. It is emitted on the directory, event, cart, checkout, payment, and protected order pages.
+
+## Event presentation
+
+The editor exposes public typography, color, hero, and content controls while preserving responsive layout rules. Hero copy should remain concise enough for both desktop and mobile. Long words and translated headings wrap within their columns rather than overflowing into ticket selection.
+
+Preview these states before saving:
+
+- Directory and event selection.
+- Ticket quantities, remaining inventory, and disabled states.
+- Cart lines, promotions, totals, and reservation countdown.
+- Billing and per-attendee forms.
+- BTCPay payment handoff.
+- Paid confirmation and protected ticket actions.
+
+## Smooth editing behavior
+
+Selecting a section updates the inspector without submitting the settings form or resetting the preview scroll position. Use the explicit **Save** action when the design is ready. Navigating away with unsaved changes should be treated as abandoning those edits.
+
+## Accessible brand choices
+
+- Keep body text and controls at a readable contrast against the page background.
+- Do not rely on color alone for payment, inventory, or admission state.
+- Use a visible focus treatment for links, fields, and quantity controls.
+- Check headings at narrow mobile widths and at 200% browser zoom.
+- Add useful alternative text when an image communicates event information.
+
+## Enforced attribution
+
+The public footer includes the required MakePay and BTCPay attribution with project links. It is part of the plugin's open-source distribution and is not an editable merchant block.
+
+For hostnames and clean URLs, see [Custom domain setup](/docs/custom-domain).

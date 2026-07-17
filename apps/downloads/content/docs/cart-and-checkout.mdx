@@ -1,0 +1,50 @@
+---
+title: Cart and BTCPay checkout
+description: Understand background cart updates, server-side invoice creation, BTCPay's JavaScript modal, payment polling, and fulfillment transitions.
+section: Checkout and customers
+order: 10
+---
+
+## Cart behavior
+
+Visitors can combine media and license products in one store-scoped cart. Adding an item from a catalog card or product page happens in the background, updates the header count, and opens a temporary cart summary. This preserves the browsing position and prevents accidental double submission caused by a full form reload.
+
+The cart page provides quantity controls where the product permits multiple units, removal actions, a calculated total, and a clear path back to shopping. Layout remains responsive so quantity and total controls do not overlap at narrower widths.
+
+## Collect customer email
+
+Checkout requires an email address for delivery and purchase recovery. Treat it as personal data: collect only what is needed, disclose the purpose, and do not send it to analytics. The customer can later use a one-time code sent to that address to open their private library.
+
+## Create the invoice server-side
+
+The browser never receives a BTCPay API key. The plugin validates the cart and buyer data on the server, creates the invoice through trusted backend services, records product snapshots, and returns only the invoice identifier needed by the public checkout flow.
+
+Never reproduce invoice creation in custom storefront JavaScript with an API key. A key embedded in a page can be extracted by every visitor.
+
+## Open the BTCPay modal
+
+The storefront loads BTCPay's official modal script from the same server:
+
+```html
+<script src="/modal/btcpay.js"></script>
+```
+
+After server-side invoice creation, it opens the invoice with:
+
+```js
+window.btcpay.showInvoice(invoiceId);
+```
+
+This is a JavaScript modal integration, not a merchant-built iframe. The plugin listens for modal lifecycle and invoice-status messages, then continues polling authoritative server state. Closing the modal does not mark a valid pending payment as cancelled.
+
+## Payment states and fulfillment
+
+An unpaid, expired invoice does not unlock content. If a payment is detected or awaits blockchain confirmation, the order remains in an appropriate pending or processing state rather than being treated as a simple abandoned cart.
+
+The store's delivery policy determines whether fulfillment starts at `Processing` or after settlement. A confirmed successful order receives a completion page and private-library access. License lines issue the configured serial; media lines create their protected deliveries.
+
+## Idempotency and retry safety
+
+Checkout buttons and server actions use loading states and disabled submission controls to prevent fast double-clicks. Fulfillment is designed around recorded order state so repeated invoice events or page refreshes do not intentionally issue duplicate access.
+
+When diagnosing a checkout, use the admin [Order details](/docs/order-details) page. It ties the checkout, invoice, line snapshots, customer, delivery usage, email, and license fulfillment together without exposing secret capability tokens.

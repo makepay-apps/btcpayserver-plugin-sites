@@ -1,0 +1,50 @@
+---
+title: Order details and reporting
+description: Search every reservation, inspect invoice-backed totals, and review delivery and admission history.
+section: Operations
+order: 14
+---
+
+The Event Tickets dashboard includes server-side search, event and payment-status filters, selectable page sizes, stable numbered pagination, and result ranges across the complete order history.
+
+## Filter the order table
+
+Search can locate relevant order, customer, or event context without loading the full history into browser memory. Combine it with:
+
+- An event filter.
+- Payment or order status.
+- Page size.
+- Numbered pagination.
+
+The selected filters are preserved when an administrator opens an order and returns to the dashboard.
+
+## Order detail contents
+
+The secure, store-scoped detail page brings together:
+
+- Order, event, invoice, and checkout-source identifiers.
+- Historical subtotal, discount, total, and currency.
+- Reservation, creation, payment, issue, and delivery timestamps.
+- Buyer and per-ticket attendee snapshots.
+- Issued ticket state, current inside status, and total entrances.
+- Last check-in and check-out context.
+- ID confirmation and rejection counts.
+- Email delivery state and direct invoice navigation.
+
+Only administrators authorized for the same BTCPay store can access the record.
+
+## Historical amount accuracy
+
+The detail page prefers the captured BTCPay invoice amount and order snapshots. It does not recalculate a past sale from the ticket type's current price. This matters after price edits, promotions, or deletion of an old ticket type.
+
+Legacy records that lack an authoritative value show that the amount was not captured rather than inventing a total from current catalog data.
+
+## Deleted configuration
+
+An event or ticket type may be unavailable after a historical order. The detail page falls back to stored snapshots and identifiers so the transaction remains understandable without exposing internal secrets.
+
+## Sensitive values
+
+Admin views receive sanitized projections. Scanner tokens, recoverable ticket codes, password or key material, hashes, storage secrets, and unrelated personal request data do not enter the Razor view model.
+
+For privacy-safe funnel measurement, see [Analytics and GTM](/docs/analytics).

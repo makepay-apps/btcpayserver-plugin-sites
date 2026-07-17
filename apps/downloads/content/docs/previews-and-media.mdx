@@ -1,0 +1,50 @@
+---
+title: Previews and media playback
+description: Build safe public samples and reliable buyer playback for PDF, audio, video, photo, and art products.
+section: Catalog and storefront
+order: 7
+---
+
+## Separate previews from originals
+
+A preview exists to help a visitor decide whether to buy. It is served publicly and must never be treated as protected fulfillment. Create a separate sample, demo, trailer, or derived image rather than pointing the preview field at the paid original.
+
+The plugin stores local previews under a store-and-product boundary separate from protected originals. Remote preview URLs should likewise point to intentionally public assets without private query signatures that reveal origin configuration.
+
+## PDF samples and reading
+
+For a PDF or ebook, prepare a sample document containing only the approved pages. The storefront uses the bundled PDF.js viewer from the same BTCPay origin, avoiding a third-party reader that could receive the document URL.
+
+After purchase, the customer library can open the authorized PDF in the browser and can expose download only when the product's delivery mode permits it. Test page navigation, zoom, mobile layout, and large-document loading before publication.
+
+## Audio demos and playback
+
+Audio pages can show a native media player for a public demo. Keep the demo short enough to load quickly and encode it in a format supported by the browsers your customers use.
+
+Purchased playback is authorized with the same delivery controls as downloads. Single-range HTTP support allows a browser to seek without incrementing the download counter for every byte range. The browser can still buffer or record the stream; this is not DRM.
+
+## Video trailers and streaming
+
+Use a separate, reduced trailer for public pages. It should have a poster or opening frame that remains clear at desktop and mobile sizes. For the protected original, prefer web-ready encoding and test seeking against the real reverse proxy, because range headers and response buffering can behave differently from local development.
+
+Large master videos belong in private S3-compatible storage or a hardened custom origin. They are still proxied through BTCPay so plan server bandwidth and timeout settings accordingly.
+
+## Photo and art previews
+
+The plugin creates derived public assets for photo and art galleries. Configure a preview size that preserves important detail without distributing the full-resolution original. Optional watermarking can identify the seller or product, but it cannot prevent saving a public image.
+
+Review these details:
+
+- watermark contrast on light and dark regions;
+- line-art legibility after scaling;
+- crop and aspect ratio on product cards;
+- high-density mobile rendering;
+- alt text and meaningful product descriptions.
+
+## Upload and proxy limits
+
+Public demo and preview uploads are capped at 95 MB to stay below the common 100 MB BTCPay reverse-proxy request limit. A proxy configured with a smaller body limit can reject even smaller uploads before the plugin receives them.
+
+When a preview fails, check the browser network response, BTCPay logs, proxy body-size configuration, content-type, file signature, and allowed extension. Do not disable file validation merely to accept a mislabeled or unsupported file; re-encode it to a known format instead.
+
+See [Storage and protected delivery](/docs/storage-and-delivery) for original-file architecture and [Troubleshooting](/docs/troubleshooting) for range and proxy diagnostics.

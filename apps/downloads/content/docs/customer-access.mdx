@@ -1,0 +1,46 @@
+---
+title: Passwordless customer access
+description: Configure one-time email codes, encrypted sessions, purchase history, protected media, and customer recovery without passwords.
+section: Checkout and customers
+order: 11
+---
+
+## How sign-in works
+
+Customers sign in with the email address used for checkout. The plugin creates a one-time, expiring code, stores it in protected form, and asks BTCPay's configured SMTP service to send it. No reusable password is collected or stored.
+
+After successful verification, the customer receives an encrypted, store-scoped session. A session for one BTCPay store cannot select another store's purchase history. Configure code lifetime and customer-session duration in **Store settings → Customer access**.
+
+## Email delivery requirements
+
+Passwordless access depends on working BTCPay email settings. Test SMTP and confirm sender reputation before launch. If a message is delayed beyond the code lifetime, increasing the lifetime slightly may be more appropriate than training customers to request many codes.
+
+The public response should not reveal whether an arbitrary email has purchase history. Rate limits and uniform responses reduce account enumeration and mail abuse.
+
+## Private purchase library
+
+The library groups the authenticated customer's order history and current entitlements. Depending on the products purchased, it can provide:
+
+- protected file downloads with remaining usage and expiry;
+- authorized PDF reading;
+- audio or video streaming and download actions;
+- photo or art originals;
+- recoverable software license keys;
+- activation and validity state;
+- checkout and invoice status.
+
+The library links to server-authorized routes. It does not expose local filenames, S3 credentials, custom-origin authorization, token hashes, or private storage URLs.
+
+## Return URLs and custom domains
+
+The sign-in flow validates return destinations and keeps navigation within the intended storefront. With a BTCPay app domain mapping, generated links use the mapped hostname and the configured BTCPay root path. Legacy store-scoped visits remain supported, while safe requests can be canonicalized to the clean host.
+
+Tor visits to a legacy route remain on the active `.onion` origin so passwordless and delivery links do not unexpectedly move the customer to a clearnet hostname.
+
+## Session and device policy
+
+A longer session reduces repeated email challenges but extends the useful lifetime of a stolen browser session. Choose a duration appropriate for the value of the catalog and the devices customers typically use. Encourage users of shared devices to sign out and avoid putting access capability parameters into support tickets or screenshots.
+
+First-IP locking on a delivery is separate from the customer session. It can reduce casual link sharing but may frustrate mobile customers whose public address changes. Use it only where that tradeoff is understood.
+
+Administrators can review a customer's fulfillment without impersonating the customer through [Order details](/docs/order-details).

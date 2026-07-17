@@ -1,0 +1,46 @@
+---
+title: Check-in, check-out, and ID review
+description: Operate atomic admission actions, re-entry, entrance counts, and staff-confirmed photo-ID decisions.
+section: Admissions
+order: 12
+---
+
+The scanner separates identification from state change. Reading a QR shows the ticket record; staff explicitly choose the appropriate action after reviewing the result.
+
+## Check in
+
+For a valid holder who is currently outside, **Check in** performs an atomic admission. A successful admission:
+
+- Marks the ticket holder inside.
+- Records the action time and available operator or gate context.
+- Increments the ticket's entrance count.
+- Updates the admission history shown to later scans and administrators.
+
+Repeated taps or concurrent devices cannot legitimately create separate state transitions from the same outside state.
+
+## Check out
+
+For a holder currently inside, **Check out** requires confirmation that the person is exiting. Successful check-out marks the holder outside but does not invalidate the ticket.
+
+The same attendee can then re-enter. Their next successful check-in increments the entrance count again, giving staff and administrators a clear re-entry history.
+
+## Photo-ID review
+
+When the event requires ID review, the person holding the scanner must record one of two decisions before admission:
+
+- **ID confirmed** — the presented identification matches the attendee.
+- **ID rejected** — the identification does not match or is not acceptable.
+
+The scanner does not photograph, upload, or algorithmically verify the document. A rejection never checks the holder in. Confirmed and rejected decisions are counted per ticket so operators can review repeated attempts.
+
+Check-out does not require a new ID decision. The next re-entry follows the event's current admission rule.
+
+## Staff decision guide
+
+1. Verify that the result is valid for the displayed event.
+2. Compare ticket type and attendee identity with the person present.
+3. Complete the ID decision if required.
+4. Choose check-in or confirmed check-out based on the current door state.
+5. Wait for the success result before moving to the next person.
+
+Do not override an invalid ticket by editing application data. Escalate the customer to an operator who can inspect the paid order and issued ticket in BTCPay administration.

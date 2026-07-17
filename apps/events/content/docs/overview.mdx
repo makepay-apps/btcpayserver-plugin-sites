@@ -1,0 +1,53 @@
+---
+title: Product overview
+description: Understand the Event Tickets architecture, operator workflow, and public customer journey.
+section: Getting started
+order: 1
+---
+
+MakePay Event Tickets turns one BTCPay Server store into a self-hosted ticket operation. Event configuration, inventory, reservations, BTCPay invoices, attendee records, ticket delivery, and admissions remain inside infrastructure controlled by the server operator.
+
+## What the plugin provides
+
+The plugin adds four connected experiences:
+
+1. A public event directory and event-specific ticket storefront.
+2. A multi-step cart, buyer and attendee form, and BTCPay payment handoff.
+3. Protected post-payment ticket pages with PDF and optional wallet delivery.
+4. BTCPay administration for events, orders, POS sales, scanner sharing, and admission history.
+
+The public journey is branded independently for each BTCPay store. Operators can configure the logo, artwork, colors, typography, copy, favicon, policies, ticket fields, and confirmation experience without changing the plugin source.
+
+## Payment and fulfillment boundary
+
+The browser never creates an invoice directly and never receives an API key. The plugin creates the BTCPay invoice on the server, records a reservation, and opens the supported BTCPay JavaScript modal. Fulfillment starts only from trusted invoice state.
+
+> A modal closing is not a payment failure. The plugin continues to poll trusted order state because an on-chain payment may be detected or awaiting confirmation after the customer closes the checkout.
+
+Inventory is reserved atomically during checkout and released when an unpaid reservation truly expires or its invoice becomes invalid. Once payment activity exists, the flow avoids treating the customer as an ordinary abandoned reservation.
+
+## Operator workflow
+
+### Before sales
+
+- Create an event and one or more ticket types.
+- Set schedule, venue, capacity, quantity limits, and publication state.
+- Configure storefront design, checkout requirements, delivery, and policies.
+- Test email, PDF, wallet, analytics, and payment behavior with a low-value ticket.
+
+### During sales
+
+- Monitor inventory and paid, pending, expired, or cancelled orders.
+- Open order details for historical totals, buyer and attendee snapshots, delivery state, and issued tickets.
+- Use the event-specific POS when staff must create an in-person order.
+
+### At the venue
+
+- Share the protected scanner for that event with authorized staff.
+- Scan a QR code, review the attendee, and explicitly check in or check out.
+- Record the required ID decision when the event enables photo-ID review.
+- Audit current inside state, total entrances, and ID confirmation or rejection counts.
+
+## Recommended next steps
+
+Start with [Installation](/docs/installation), then follow [Create your first event](/docs/first-event). Before opening sales, review [Security model](/docs/security) and run the checklist in [Testing and troubleshooting](/docs/troubleshooting).

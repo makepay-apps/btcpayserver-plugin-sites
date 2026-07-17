@@ -1,0 +1,49 @@
+---
+title: Storage and protected delivery
+description: Configure local, private S3-compatible, or authenticated custom-origin files and understand delivery tokens, limits, ranges, and revocation.
+section: Catalog and storefront
+order: 8
+---
+
+## Local protected uploads
+
+Local uploads are stored inside the plugin's protected data area under the owning store and product. They are not static web files and are not served by guessing a path. Include this area in BTCPay data backups and monitor disk capacity as the catalog grows.
+
+Local storage is the simplest option for moderate assets on a server you administer. It also means BTCPay is responsible for both storage and egress, so use quotas and capacity alerts.
+
+## Private S3-compatible objects
+
+S3 mode reads a private object using the configured endpoint, region, bucket, key, and access credentials. Use a dedicated identity with read-only access to the narrowest possible prefix. Block public bucket access and avoid embedding long-lived presigned URLs as product sources.
+
+The plugin signs object requests server-side. Customers receive the plugin delivery URL, not the bucket URL or access key. Verify compatibility with the selected S3 provider, especially region handling, path-style endpoints, TLS, and object content type.
+
+## Authenticated custom origins
+
+A custom source URL connects an existing protected file service. The plugin validates remote destinations, performs DNS and public-address checks, disables redirects, and sends only validated custom authentication headers. These controls reduce server-side request forgery and credential forwarding to an unexpected host.
+
+Use HTTPS, a dedicated read-only credential, and a stable public DNS name. Do not point the origin at localhost, private infrastructure, link-local addresses, or endpoints that redirect to a different host.
+
+## Delivery authorization
+
+At checkout, the plugin snapshots the product and fulfillment configuration. Once payment reaches the configured BTCPay state, it creates authorized delivery records with:
+
+- cryptographically random capability tokens;
+- SHA-256 token hashes for lookup;
+- encrypted recoverable token material where required for email and library access;
+- expiration and download limits;
+- revocation state;
+- optional first-IP locking.
+
+Original source paths, object credentials, private URLs, tokens, and IP hashes do not appear in the admin Razor view or public HTML.
+
+## Range requests and counting
+
+Audio and video use single-range HTTP delivery so browsers can seek. A valid range response does not consume an additional download for every segment of one playback operation. Test the `Range` and `Content-Range` behavior through the production proxy, not only against localhost.
+
+Download counts, expiry, and revocation are visible in the order detail workspace. Revoke access when a refund, compromise, or policy decision requires it; the existing protected capability should then fail closed.
+
+## Delivery timing
+
+The safer default is to fulfill only after BTCPay marks the invoice settled. Unlocking at `Processing` improves speed for some payment methods but accepts the risk that a payment never reaches final settlement. Apply that policy at the store level with a clear understanding of the asset's value and reversibility.
+
+For customer operations, continue with [Order details](/docs/order-details). For design assumptions and threat boundaries, read [Security model](/docs/security).

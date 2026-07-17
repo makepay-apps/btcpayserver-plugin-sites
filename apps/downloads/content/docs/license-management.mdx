@@ -1,0 +1,54 @@
+---
+title: License products and key management
+description: Define serial formats, activation and validity policies, issue keys, fulfill paid orders, and review lifecycle state.
+section: Licenses and integrations
+order: 13
+---
+
+## Create a license product
+
+License products live in the same storefront and cart as media products. From **Digital Products → License keys**, add a product with a name, slug, description, price, publication state, serial pattern, maximum activation count, and optional validity duration.
+
+The key pattern supports tokens such as:
+
+- `\{A:n\}` for alphabetic characters;
+- `\{N:n\}` for digits;
+- `\{X:n\}` for alphanumeric characters;
+- `\{HEX:n\}` for hexadecimal characters;
+- `\{YEAR\}` for the current year.
+
+For example, a pattern can combine a product prefix, year, and random groups. Use enough randomness for the expected issuance volume; a decorative short serial is easier to guess and more likely to collide.
+
+## Paid and manual issuance
+
+After a qualifying BTCPay invoice reaches the configured fulfillment state, the plugin generates a unique key, records the relationship to the order and invoice, applies activation and expiry policy, and queues the configured email.
+
+Authorized administrators can also issue a key manually for support, migration, or offline sales. A manual issue is recorded in the license audit history so it is distinguishable from payment fulfillment.
+
+Generation retries on collisions and fails rather than silently issuing a duplicate. The recoverable key is encrypted at rest, while a normalized one-way hash supports lookup.
+
+## Activation policy
+
+`Max activations` limits the number of simultaneous activation identifiers accepted for one license. An activation represents the device or installation identifier supplied by the integrating application, not merely a count of verification calls.
+
+The optional duration determines `ExpiresAt` when the license is issued. A lifetime license has no automatic expiry. Deactivation frees the relevant activation according to API policy; heartbeat records continued use without creating a new activation.
+
+## Administrative lifecycle
+
+The unified dashboard reports license products, issued licenses, active licenses, and total activations. Operators can search and inspect state without putting every raw key into list pages.
+
+Use lifecycle actions deliberately:
+
+- issue for an authorized customer or migration;
+- suspend when temporary access must stop;
+- revoke when the entitlement is permanently invalid;
+- deactivate a specific installation when a customer moves devices;
+- inspect bounded audit history for verification and activation outcomes.
+
+## Email templates
+
+License settings include an editable HTML message. Supported values include the product name, license key, and expiry. Treat the message as sensitive because it contains the recoverable key. Avoid remote tracking pixels and do not send the key to analytics or third-party support systems.
+
+If email fails, the license can still exist. Use the order and license administration views to confirm issuance before retrying delivery; generating a second key is not the same as resending the existing entitlement.
+
+Application integration is covered in [License verification API](/docs/license-api).

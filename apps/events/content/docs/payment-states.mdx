@@ -1,0 +1,38 @@
+---
+title: Reservations and payment states
+description: Learn how expiry, partial payment, pending confirmation, cancellation, and fulfillment affect inventory.
+section: Storefront and checkout
+order: 7
+---
+
+Ticket inventory and payment are related but separate state machines. A reservation protects inventory for checkout; a BTCPay invoice reports whether value has been received and whether the payment is settled enough to fulfill.
+
+## Typical state progression
+
+| Customer state | Operational meaning | Inventory behavior |
+| --- | --- | --- |
+| Reserved | Checkout exists and is within its hold window | Quantity remains held |
+| Pending payment | Invoice is open or payment is being observed | Do not issue tickets yet |
+| Paid | Trusted BTCPay state permits fulfillment | Issue tickets once |
+| Expired unpaid | Hold ended with no qualifying payment activity | Release quantity |
+| Invalid or cancelled | Invoice/order cannot fulfill | Release or keep released |
+
+The exact invoice labels come from BTCPay Server. The plugin maps them into a customer-safe status and an idempotent fulfillment decision.
+
+## Partial and late payments
+
+A partially paid or detected on-chain invoice must not be treated like a customer who never paid. The payment screen remains available and explains that the payment is processing or awaiting confirmation. Operators should inspect the linked invoice before intervening.
+
+If a payment arrives after ordinary expiry, BTCPay's invoice state remains the source of truth. Never issue replacement tickets manually without first checking whether the original order has fulfilled or can still fulfill.
+
+## Expired reservations and rebuy
+
+When a genuinely unpaid reservation ends, its ticket allocation is released and the customer sees a clear ended state. **Choose tickets** starts over; **Rebuy** can reconstruct the prior selection when current capacity and prices still allow it.
+
+Saved billing and attendee values can repopulate from local browser storage. This does not bypass validation or restore the old inventory hold.
+
+## Idempotent fulfillment
+
+Invoice callbacks, status polling, and restarts can all revisit the same paid order. Ticket issuance and delivery are designed to avoid creating a second set for the same fulfillment transition. Operators should use the order detail page rather than modifying records directly.
+
+For diagnosis, compare the order status, invoice link, reservation expiry, and delivery timeline described in [Order details and reporting](/docs/order-details).

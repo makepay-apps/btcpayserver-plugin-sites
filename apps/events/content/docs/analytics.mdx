@@ -1,0 +1,49 @@
+---
+title: Analytics and GTM
+description: Configure consent-aware GA4 or Google Tag Manager and consume normalized ecommerce events safely.
+section: Operations
+order: 15
+---
+
+Event Tickets supports either Google Tag Manager or direct Google Analytics 4. Select one provider to avoid duplicate reporting. A stable local data-layer contract is available even when no Google script is enabled.
+
+## Provider setup
+
+Open **Event Tickets → Settings → Analytics & ecommerce events** and choose:
+
+- **Google Tag Manager** with a `GTM-…` container ID, or
+- **Google Analytics 4** with a `G-…` measurement ID.
+
+Consent is required by default. Google scripts do not load before approval, consent revocation reloads into a script-free state, and Do Not Track can disable both Google and local data-layer collection.
+
+## Event contract
+
+Every public page initializes `window.dataLayer` and `window.makePayAnalytics`. Ecommerce events clear stale ecommerce state before pushing and include a `makepay` context with plugin `event_tickets`, store context, and schema version `1`.
+
+The flow includes:
+
+- `page_context`, `page_view`, and `view_item_list`.
+- `select_item` and `view_item`.
+- `add_to_cart`, `view_cart`, and deduplicated `begin_checkout`.
+- Deduplicated `add_payment_info` when payment is opened.
+- `purchase` only after trusted paid fulfillment.
+
+Purchase data includes a stable one-way analytics transaction ID, ISO currency, value, coupon context, and ticket-type items.
+
+## Data that is excluded
+
+Analytics payloads never include buyer or attendee names, emails, phone numbers, companies, countries, ticket codes, invoice IDs, access tokens, payment addresses, raw order IDs, or checkout capability parameters.
+
+## Safe GTM page views
+
+The configured GTM container is merchant-controlled JavaScript and can read browser state. Checkout and order URLs contain protected capabilities, so do **not** use an automatic **All Pages** pageview trigger or GTM's raw **Page URL** variable on those routes.
+
+Instead:
+
+1. Trigger page tracking from MakePay's `page_view` data-layer event.
+2. Map its top-level `page_location`, `page_path`, and `page_referrer` values.
+3. Use the normalized ecommerce object supplied with each funnel event.
+
+Those location fields remove query strings and fragments and mask dynamic checkout or order segments. Direct GA4 disables automatic pageviews and sends the sanitized values explicitly.
+
+The standalone admissions scanner is intentionally outside storefront analytics.

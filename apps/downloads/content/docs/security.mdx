@@ -1,0 +1,61 @@
+---
+title: Security model
+description: Review trust boundaries, protected data, token and API controls, SSRF defenses, privacy, and operational hardening.
+section: Operations and security
+order: 17
+---
+
+## Trust boundaries
+
+MakePay Digital Products extends the BTCPay Server trust boundary. Store administrators configure products and origins; public visitors browse and create checkout requests; authenticated customers receive only the entitlements associated with their store and email; server administrators control plugin installation and hostname mapping.
+
+BTCPay remains authoritative for invoice and payment state. Browser messages from the checkout modal improve the experience but do not independently authorize fulfillment.
+
+## Protected data
+
+Public and general admin views must not reveal:
+
+- local original paths;
+- S3 access keys, secret keys, or private object locations;
+- custom-origin authorization headers;
+- delivery or checkout access tokens;
+- raw or encrypted license keys in list and order projections;
+- token, license, nonce, or IP hashes.
+
+Dedicated authorized actions reveal only what an operator or buyer needs for the current task. Avoid copying secret links or keys into screenshots, analytics, issue trackers, and chat systems.
+
+## Delivery capabilities
+
+Protected links use cryptographically random tokens, one-way hashes, encrypted recovery where required, expiry, download limits, revocation, and optional first-IP locking. Treat the complete URL as a bearer capability. HTTPS is mandatory.
+
+Product and fulfillment configuration is snapshotted at checkout to prevent a later catalog edit from silently changing the source of an existing entitlement.
+
+## Remote-origin defenses
+
+Custom origins and S3-compatible endpoints cross a server-side network boundary. The plugin validates public destinations, checks DNS, disables redirects, constrains custom headers, and avoids exposing credentials to the customer. Still use a dedicated read-only identity and egress controls at the infrastructure layer.
+
+Do not weaken destination validation to reach an internal host. If internal media must be served, place it behind a purpose-built public HTTPS origin with narrowly scoped authorization.
+
+## License API defenses
+
+License endpoints support custom `X-` headers, HMAC-SHA256 request and response signatures, constant-time comparison, timestamp windows, nonce replay protection, rate limiting, activation limits, and bounded audit history. Rotate secrets, synchronize clocks, generate unpredictable nonces, and verify response signatures before trusting status.
+
+## Customer and analytics privacy
+
+Passwordless codes expire and customer sessions are encrypted and store-scoped. Public responses should not enumerate whether an email has orders. SMTP, logs, and support processes are part of the same privacy boundary.
+
+Analytics payloads exclude email, raw order identifiers, license keys, and capability tokens. URL sanitization does not make arbitrary merchant GTM tags safe; audit container code and avoid automatic page-URL collection on protected routes.
+
+## Operational hardening checklist
+
+- Keep BTCPay Server, the plugin, host OS, and reverse proxy supported and patched.
+- Back up data and local originals; test restoration.
+- Use private buckets and minimum read-only credentials.
+- Deliver after settlement unless the business accepts processing-state risk.
+- Monitor disk, bandwidth, email, and fulfillment failures.
+- Test store isolation and clean-domain mappings after changes.
+- Revoke compromised delivery and license capabilities promptly.
+- Review audit history and rate-limit activity for abuse.
+- Make support staff use order details rather than asking customers for secret URLs.
+
+For recovery steps and symptom-based diagnostics, see [Troubleshooting](/docs/troubleshooting).

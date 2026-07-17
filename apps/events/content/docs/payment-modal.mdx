@@ -1,0 +1,48 @@
+---
+title: BTCPay payment modal
+description: Understand server-side invoice creation, JavaScript embedding, modal events, and payment status recovery.
+section: Storefront and checkout
+order: 6
+---
+
+Event Tickets uses BTCPay Server's supported JavaScript checkout modal. It is not an iframe assembled by the plugin and it never exposes a Greenfield API key to browser code.
+
+## Invoice creation
+
+After checkout validation, the plugin creates the invoice through trusted server code. The invoice carries the order relationship and safe return information required to resume the ticket journey.
+
+The public page then loads BTCPay's modal script from the same server:
+
+```html
+<script src="/modal/btcpay.js"></script>
+```
+
+and opens the already-created invoice:
+
+```js
+window.btcpay.showInvoice(invoiceId)
+```
+
+The identifier is safe to use for opening that checkout. API credentials remain server-side.
+
+## Modal lifecycle
+
+The integration observes the supported modal callbacks to coordinate interface state and analytics:
+
+- `onModalWillEnter` marks checkout as open.
+- `onModalReceiveMessage` receives invoice status messages.
+- `onModalWillLeave` records that the modal closed.
+
+The modal can be reopened while the invoice remains payable. A protected fallback link is available if the script cannot open the overlay.
+
+## Closing is not cancellation
+
+Closing the modal does not cancel the BTCPay invoice or release tickets immediately. Bitcoin payments can be seen after the UI closes and may wait for blockchain confirmation. The payment page continues polling the server's trusted order state.
+
+The reservation expiry decision distinguishes an untouched unpaid session from an invoice with payment activity. A customer is not redirected to an ordinary expired state merely because the checkout timer reached zero while payment is detected or the payment lifecycle is still active.
+
+## Completion
+
+After the paid state is confirmed, the plugin issues tickets, makes the protected order page available, and triggers configured delivery. The success page shows downloadable PDF and wallet actions when enabled.
+
+For the complete state model, see [Reservations and payment states](/docs/payment-states).

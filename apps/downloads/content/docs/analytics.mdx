@@ -1,0 +1,55 @@
+---
+title: GTM and Google Analytics
+description: Configure consent-aware GTM or direct GA4 commerce events without leaking buyer email, keys, tokens, or capability URLs.
+section: Licenses and integrations
+order: 15
+---
+
+## Choose one provider
+
+Each store can use Google Tag Manager, direct Google Analytics 4, or the local `dataLayer` contract without loading Google. Configure only one Google provider so the plugin does not report the same event twice. Container and measurement identifiers are validated and normalized before save.
+
+The commerce lifecycle includes:
+
+- `view_item_list` and `select_item`;
+- `view_item`;
+- `add_to_cart` and `remove_from_cart`;
+- `view_cart`;
+- `begin_checkout` and `add_payment_info`;
+- `purchase`.
+
+Payloads use normalized currency, value, and item data. Purchase includes a stable one-way transaction identifier so GA4 can deduplicate repeated receipt visits.
+
+## Data that is excluded
+
+The plugin does not put buyer email, license key, delivery token, checkout access token, raw order identifier, or raw checkout identifier into commerce events. Dynamic capability segments in URLs are masked before analytics sees them.
+
+Direct GA4 disables automatic page views and supplies a sanitized origin-plus-path location. Referrers use the same sanitization. This avoids the common failure where a protected receipt or sign-in URL is copied into an analytics vendor as a page location.
+
+## Consent mode
+
+Optional consent prevents Google scripts and event collection before acceptance. Rejected visitors do not receive a private replay queue. A persistent **Analytics preferences** control lets the customer change the choice; revoking consent reloads into a state with no Google script.
+
+The store can also honor browser Do Not Track. When enabled, collection is disabled in Google and local data-layer modes.
+
+Consent copy and retention must match the merchant's jurisdiction and actual tag configuration. Installing GTM gives the merchant-controlled container the ability to run JavaScript on the page, so audit every published tag and trigger.
+
+## Safe GTM configuration
+
+GTM itself can read the browser's current URL even when the plugin sends sanitized event fields. Protected checkout, receipt, and sign-in routes can contain capability or email parameters.
+
+Configure page measurement to trigger from the plugin's `page_view` event and map the supplied `page_location` and `page_path` fields. Do not use an automatic **All Pages** page-view trigger or GTM's built-in **Page URL** variable on protected routes.
+
+## Validate events
+
+Use a test store and browser analytics debugger:
+
+1. reject consent and confirm that no Google request is made;
+2. accept consent and inspect item, currency, and value fields;
+3. add and remove products without a page reload;
+4. complete one invoice and refresh the receipt to confirm deduplication;
+5. inspect every URL field for email, order, checkout, or token material;
+6. revoke consent and confirm the Google-free reload;
+7. repeat with Do Not Track enabled if the store honors it.
+
+Analytics is an optional operational layer; payment and protected fulfillment do not depend on it.

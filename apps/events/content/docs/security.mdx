@@ -1,0 +1,52 @@
+---
+title: Security model
+description: Review trust boundaries for payments, ticket codes, scanner access, admin data, analytics, and customer links.
+section: Security and support
+order: 17
+---
+
+MakePay Event Tickets extends the BTCPay Server trust boundary. It is designed so public pages receive the minimum data required for a ticket journey while sensitive operations and credentials remain server-side.
+
+## Payments
+
+- Invoices are created by the backend; API keys never enter browser JavaScript.
+- Paid state comes from trusted BTCPay invoice state, not a client callback alone.
+- Fulfillment is idempotent across callbacks, polling, and restarts.
+- Historical totals use invoice and order snapshots instead of editable current prices.
+
+## Ticket identity and delivery
+
+- Ticket codes are generated from cryptographically secure randomness.
+- Matching values are stored as one-way hashes.
+- Recoverable values required for customer delivery are encrypted with BTCPay Server data protection.
+- Protected order, PDF, wallet, and scanner routes are capability-scoped and non-cacheable where appropriate.
+
+Anyone who receives a customer order link or ticket QR may be able to use that capability. Deliver links only to the intended customer and rotate a scanner link if it reaches an unauthorized person.
+
+## Scanner boundary
+
+Scanner access is per event, not global. A URL token is exchanged for an HttpOnly cookie scoped to the event path and then removed from the visible URL. Rotation invalidates previous links and sessions. A valid scanner cannot admit tickets from another event.
+
+Read-only scan and mutating check-in/check-out are separate actions. State changes are atomic, and optional ID review is a staff decision rather than biometric or document processing.
+
+## Administration
+
+Admin controllers enforce BTCPay store authorization. Order details and dashboards use sanitized projections rather than passing raw persistence objects with tokens, keys, hashes, IP values, or storage secrets into views.
+
+Give store administration only to users who need access to attendee and order records. Keep server and database backups encrypted and retention aligned with event policy.
+
+## Analytics and third parties
+
+GTM or GA4 are optional and mutually exclusive. Consent and Do Not Track controls prevent early loading. Normalized events exclude direct customer identifiers and mask protected route segments.
+
+Resend, Apple, and Google integrations send only the data needed for their configured delivery function. Their credentials are protected at rest and must be rotated in the issuing service after suspected exposure.
+
+## Operational checklist
+
+- Keep BTCPay Server and the plugin updated.
+- Back up before upgrades.
+- Use HTTPS for every public and scanner route.
+- Test store permissions with a non-admin account.
+- Rotate scanner access between teams or after disclosure.
+- Review admission and ID-decision history after the event.
+- Remove or archive personal data according to applicable policy.

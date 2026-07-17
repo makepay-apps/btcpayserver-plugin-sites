@@ -1,0 +1,56 @@
+---
+title: Order details and fulfillment operations
+description: Use the responsive admin order workspace to investigate invoices, customers, line snapshots, protected delivery usage, email, and licenses.
+section: Checkout and customers
+order: 12
+---
+
+## Open an order
+
+The **Recent orders** table supports server-side search, product and payment-status filters, selectable page size, and stable numbered pagination. Select an order or license-related checkout to open its dedicated detail page.
+
+The order workspace is store-authorized. It can resolve a digital order identifier, a related license order, or the checkout that connects mixed line items. Historical labels remain useful even when the current product has been renamed or deleted.
+
+## Summary and invoice
+
+The top section shows the order state, timestamps, customer email, currency and captured totals, invoice identifier, and a link to the BTCPay invoice when one exists. The plugin prefers authoritative invoice amounts where legacy order records did not capture a reliable total.
+
+A missing or deleted product does not make the order unreadable: line snapshots preserve the purchased name, type, price context, and fulfillment association available at checkout time.
+
+## Line items and delivery
+
+Each digital line shows its product format, quantity, delivery mode, protected-access state, expiration, allowed downloads, and observed usage. Audio and video playback can create range activity without being represented as a new full download for every seek operation.
+
+Operational actions such as revoking a delivery return to the order detail page and preserve the surrounding filter context. Use revocation for a refund, compromised capability, or policy decision. It should not expose or copy the underlying delivery token into the admin page.
+
+## License fulfillment
+
+A mixed order can include generated software licenses. The detail workspace connects the license product, issue state, validity, activation count, and fulfillment email without rendering the raw key, protected key material, normalized key hash, or API secrets in its general Razor model.
+
+Open the dedicated license management workflow only when an authorized operator needs to reveal or manage the key.
+
+## Safe projections
+
+The order page deliberately excludes:
+
+- delivery and checkout access tokens;
+- raw or encrypted license keys;
+- token, key, and IP hashes;
+- local filesystem paths;
+- S3 keys and credentials;
+- custom-origin URLs and authorization headers.
+
+This protects against accidental disclosure in HTML, screenshots, browser extensions, and support exports while keeping enough state for an operator to diagnose fulfillment.
+
+## Investigation workflow
+
+When a customer reports a problem:
+
+1. Search by order, invoice, product, or customer.
+2. Confirm the BTCPay invoice belongs to the same store and inspect its state.
+3. Check line snapshot, delivery creation, expiry, limits, and revocation.
+4. Review email state and the customer's passwordless access path.
+5. For a license, review issue and activation audit history.
+6. Reproduce only with a controlled test entitlement; never request the customer's secret link or raw key in public support.
+
+For common failures, see [Troubleshooting](/docs/troubleshooting).

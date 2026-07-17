@@ -1,0 +1,53 @@
+---
+title: Upgrades and migration
+description: Safely upgrade Digital Products, migrate from standalone plugins, preserve storage, and validate customer fulfillment.
+section: Getting started
+order: 4
+---
+
+## Before every upgrade
+
+Read the release notes for schema, route, and BTCPay compatibility changes. Then back up the complete BTCPay data directory and any external configuration needed to reconnect private storage. A database-only backup is not enough when original files are stored in the plugin's local protected area.
+
+Record the current plugin version, BTCPay version, plugin directory, and active custom host mappings. Exporting a small test order and noting its delivery status makes post-upgrade comparison easier.
+
+Do not delete product data as part of a normal upgrade. Current releases retain store settings, products, orders, issued licenses, API credentials, and the fulfillment snapshots associated with historical purchases.
+
+## Replace the plugin cleanly
+
+Stop the BTCPay application or follow your managed deployment's plugin-update workflow. Replace the complete plugin folder with one release, then restart. Leaving DLLs from two releases in the same directory can produce assembly-load errors that look unrelated to the update.
+
+After restart:
+
+1. confirm the version under **Manage plugins**;
+2. load **Digital Products** and **License keys**;
+3. open store settings and save a harmless change;
+4. view an existing order detail page;
+5. test one historical delivery link and one new test checkout;
+6. inspect BTCPay logs for migration, storage, or Razor errors.
+
+## Migrating from standalone plugins
+
+The unified Digital Products plugin includes license management. If an older installation still has the standalone `BTCPayServer.Plugins.MakePay.LicenseManager` folder, remove that standalone plugin before installing the unified release. Two copies can register overlapping services, routes, or navigation.
+
+Existing license-manager storage remains readable. Existing products that predate media types are treated as **File download** products. New media categories remain hidden until a published product uses them, so upgrading does not add empty navigation to the storefront.
+
+## Catalog and fulfillment compatibility
+
+Historical orders use line and fulfillment snapshots where available. This matters when a product is renamed, unpublished, moved to another source, or deleted: the administrator can still understand what was purchased, and an old order is not silently pointed at new content.
+
+After a major catalog migration, sample each source mode:
+
+- local protected file;
+- private S3-compatible object;
+- authenticated custom URL;
+- PDF preview and purchased reader;
+- seekable audio or video range request;
+- photo preview gallery;
+- generated license and activation API.
+
+## Rollback planning
+
+Rollback means restoring the compatible plugin folder and data backup together. Do not run an older binary against data after a one-way migration unless the release notes explicitly allow it. If a production issue affects only a new catalog item, unpublish that item while you preserve evidence and diagnose it rather than immediately rewriting stored records.
+
+Use [Order details](/docs/order-details) and [Troubleshooting](/docs/troubleshooting) to verify the customer-visible result after an upgrade.

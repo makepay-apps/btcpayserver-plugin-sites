@@ -1,0 +1,60 @@
+---
+title: Troubleshooting
+description: Diagnose installation, storefront, editor, checkout, email, storage, playback, analytics, license API, and custom-domain failures.
+section: Operations and security
+order: 18
+---
+
+## Plugin does not appear
+
+Confirm that the installed package targets your BTCPay version, that the complete plugin folder is in the configured plugin directory, and that BTCPay restarted. Inspect startup logs for assembly-load errors or a stale DLL from an older release. Verify the plugin version under **Manage plugins**.
+
+If migrating from the standalone license manager, remove that plugin before running the unified Digital Products plugin.
+
+## Store settings will not save
+
+Read the validation summary and open the section containing the invalid field. Required catalog copy, normalized analytics IDs, storage configuration, color values, or upload constraints can block persistence. Do not dismiss an empty-looking summary: update to a release that suppresses empty validation list items and inspect server logs for the underlying model error.
+
+## Live editor jumps or refreshes
+
+Selection changes should update the contextual panel without a complete form submission. Hard refresh once to clear stale assets, then check the browser console for JavaScript errors. Confirm the saved plugin CSS and editor bundle come from the same release. Test in a clean browser profile before attributing the issue to stored content.
+
+## Upload is rejected
+
+Check the file extension, detected content signature, content type, 95 MB preview limit, reverse-proxy request-body limit, and available disk. A proxy may reject the request before it reaches BTCPay. Re-encode mislabeled audio or video instead of disabling validation.
+
+For a large original, use private S3-compatible storage or an authenticated custom origin.
+
+## S3 or custom origin fails
+
+Verify endpoint, region, bucket, object key, TLS, DNS, and minimum read permission. For custom URLs, redirects and private-address destinations are intentionally rejected. Confirm that the configured authorization header is allowed and that the public host resolves consistently from the BTCPay server.
+
+Never print credentials into browser-visible diagnostics.
+
+## Playback does not seek
+
+Inspect the response to a request with `Range: bytes=...`. It should return a valid partial response with `Content-Range`. A reverse proxy or origin that strips range headers can break seeking. Check browser codec support and object content type as well as the plugin route.
+
+## Checkout does not unlock
+
+Open the admin order detail and BTCPay invoice together. Confirm store ownership, invoice status, configured fulfillment threshold, line snapshots, delivery creation, and revocation. A modal message or closed modal is not authoritative payment state. If fulfillment waits for settlement, a processing invoice should remain pending.
+
+Avoid creating another order until you know whether the first one issued a license or delivery.
+
+## Passwordless email does not arrive
+
+Test BTCPay SMTP, sender configuration, queue logs, spam filtering, and code lifetime. Repeated requests can encounter rate limits. The public page should not disclose whether an address has purchase history.
+
+## License API rejects requests
+
+Compare the exact endpoint, store ID, custom header, canonical signing input, timestamp, nonce, and HMAC encoding. Ensure clocks agree and every retry uses a fresh nonce. Distinguish HTTP authentication failure from a correctly authenticated response reporting expired, revoked, or over-limit status.
+
+## Analytics is missing or duplicated
+
+Configure one provider only. Check consent and Do Not Track before expecting a Google request. In GTM, trigger from the plugin `page_view` event rather than **All Pages**. Refreshing a receipt should reuse the stable one-way transaction ID so GA4 can deduplicate purchase.
+
+## Clean custom domain returns the wrong app
+
+Verify DNS, TLS, `BTCPAY_ADDITIONAL_HOSTS`, the Digital Products app identity, and BTCPay Policies domain mapping. Normalize the hostname and remove duplicate policy rows: the first exact hostname match wins. If BTCPay has a root path, include it in every test URL.
+
+When escalating, provide plugin and BTCPay versions, sanitized logs, the failing route shape without capability values, browser and proxy details, and the order or invoice ID only through an authorized private channel.

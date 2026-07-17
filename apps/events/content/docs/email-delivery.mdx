@@ -1,0 +1,45 @@
+---
+title: Email delivery
+description: Configure BTCPay SMTP or Resend, edit HTML templates, and test protected ticket delivery.
+section: Ticket delivery
+order: 8
+---
+
+Paid orders can send a branded HTML message containing a protected order link and an attached PDF ticket document. Choose either the BTCPay store's SMTP configuration or Resend.
+
+## BTCPay store SMTP
+
+SMTP reuses the email transport configured for the BTCPay store. It is the simplest choice when the store already sends invoices or notifications successfully.
+
+Before launch:
+
+1. Send a BTCPay test email from the store settings.
+2. Confirm sender identity, SPF, DKIM, and DMARC for the sending domain.
+3. Complete a test ticket order and inspect both HTML and attachment rendering.
+
+## Resend
+
+Resend requires an API key and a verified sender domain. The API credential is processed by the server and protected using BTCPay Server data protection; it must never be embedded in an HTML template or public script.
+
+Use a sender address from the verified domain and monitor Resend delivery logs when a message is rejected upstream.
+
+## Template editing
+
+The settings workspace lets operators adjust subject and HTML content. Keep the message useful even when images are blocked:
+
+- State the event name and schedule as text.
+- Explain that the protected order link should not be forwarded publicly.
+- Mention the PDF attachment and wallet options when configured.
+- Include a real support contact and policy links.
+
+Use only placeholders supported by the editor. Unknown template variables should not be assumed to render.
+
+## Delivery status
+
+The admin order detail records whether email was sent, the delivery attempt time, and failure context appropriate for an administrator. Retrying delivery should reuse the existing issued tickets rather than minting new ones.
+
+## Security and privacy
+
+Email is not a private storage system. The link it carries is a capability to the order page, so recipients should avoid publishing or forwarding it. Ticket QR values are not included in analytics, log-friendly URLs, or public page metadata.
+
+See [PDF tickets](/docs/pdf-tickets) for the attachment and [Testing and troubleshooting](/docs/troubleshooting) for common delivery failures.

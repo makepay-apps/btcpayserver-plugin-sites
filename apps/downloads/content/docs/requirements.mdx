@@ -1,0 +1,62 @@
+---
+title: Requirements and planning
+description: Check BTCPay, email, storage, network, and operational prerequisites before installing Digital Products.
+section: Getting started
+order: 2
+---
+
+## Software requirements
+
+MakePay Digital Products requires BTCPay Server 2.3.5 or newer. Use the plugin release built for your BTCPay major and minor line, and review the release notes before upgrading either component.
+
+Building from source requires the .NET 8 SDK and initialized BTCPay submodules. Running a published `.btcpay` package does not require an SDK in the BTCPay container.
+
+The storefront supports current evergreen browsers. PDF reading uses bundled same-origin PDF.js assets; audio and video playback depend on the browser supporting the uploaded media codec.
+
+## Store requirements
+
+Prepare a BTCPay store with at least one functioning payment method. The plugin creates invoices through BTCPay and does not bypass the store's payment, settlement, or expiration rules.
+
+Configure **Store settings → Emails** when you want any of the following:
+
+- passwordless sign-in codes;
+- purchase or delivery messages;
+- generated license-key email;
+- customer recovery of purchase history.
+
+Without working SMTP, checkout can still complete, but passwordless library access and delivery messages cannot operate reliably. Test a message from BTCPay before accepting orders.
+
+## Storage planning
+
+Choose a protected source for every original:
+
+| Source | Best for | Operational consideration |
+| --- | --- | --- |
+| Local upload | Small and moderate files on a managed server | Included in BTCPay data backups; consumes server disk |
+| Private S3-compatible object | Large media and scalable libraries | Requires private bucket, dedicated read-only credentials, endpoint and region |
+| Authenticated custom URL | Existing protected origin infrastructure | Origin must resist SSRF, redirects, and credential leakage |
+
+Preview and demo uploads are limited to 95 MB so they remain below the common 100 MB BTCPay reverse-proxy request limit. Put large master audio, video, and archives in S3-compatible storage or a protected custom origin.
+
+Estimate bandwidth as well as capacity. The plugin proxies protected delivery through BTCPay so private origin locations and credentials never reach the buyer. Large streaming catalogs can therefore add sustained egress and connection load to the BTCPay host.
+
+## Domain and network planning
+
+A custom hostname requires DNS pointing to the BTCPay deployment, ports 80 and 443 reaching its reverse proxy, and a valid TLS certificate. Official Docker deployments normally add the host through `BTCPAY_ADDITIONAL_HOSTS` before a BTCPay domain mapping is created.
+
+> A DNS record alone is not sufficient. The receiving proxy must accept the hostname and terminate HTTPS.
+
+Use a dedicated subdomain such as `shop.example.com` when the apex domain already serves another application. Mapping a hostname to a BTCPay app aliases the complete BTCPay Server at that host; it is not a network isolation boundary.
+
+## Operational ownership
+
+Assign owners for:
+
+1. BTCPay and plugin upgrades;
+2. backups of BTCPay data and locally uploaded originals;
+3. S3 or custom-origin credential rotation;
+4. fulfillment and email monitoring;
+5. privacy consent and analytics configuration;
+6. responding to revoked, expired, or exhausted delivery access.
+
+Once these requirements are in place, proceed to [Installation](/docs/installation).

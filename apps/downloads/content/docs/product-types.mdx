@@ -1,0 +1,58 @@
+---
+title: Product formats
+description: Choose the right format and delivery mode for files, PDFs, audio, video, photos, art, and software licenses.
+section: Catalog and storefront
+order: 5
+---
+
+## File download
+
+Use **File download** for archives, templates, documents, source code, presets, datasets, and any asset that does not need a specialized public preview. The original is delivered through a protected route with configurable link lifetime, download count, revocation, and optional first-IP locking.
+
+The public product page can use cover art and descriptive metadata without exposing the original filename, local path, or private origin.
+
+## PDF and ebook
+
+PDF products can include a separate public sample. The sample is intentionally public and should contain only pages you are comfortable distributing. Buyers can read the purchased PDF in a book-style browser powered by bundled same-origin PDF.js assets, download it, or use the delivery mode you configured.
+
+Do not upload the full original as the sample. A sample URL is not protected by purchase access.
+
+## Music and audio
+
+Audio products support an optional demo player and protected playback of the original. Choose **stream**, **download**, or **stream and download**. Seekable playback uses single-range HTTP responses, so moving through a track does not count as a fresh download for every range request.
+
+Use browser-compatible formats such as MP3, M4A, OGG, WAV, or FLAC after checking your audience's platform support. A public demo should be a deliberately shortened or altered asset, not the paid master.
+
+## Video content
+
+Video products follow the same separation: an optional public trailer and a protected original for buyers. This format fits tutorials, courses, stock footage, screen recordings, and event replays. MP4 and WebM are common browser choices.
+
+Protected streaming is access control, not DRM. A determined user can record anything their browser can play. Use visible ownership notices and product terms when redistribution risk matters.
+
+## Photos and art
+
+Photo products can publish a gallery of derived previews. The plugin can downscale and optionally watermark previews while keeping full-resolution originals behind the purchase boundary. Preview derivation avoids the thin-line and pixel-loss problems that arise when a browser crudely shrinks a very large original into a small card.
+
+Watermarking discourages casual copying but does not make a public preview secret. Choose preview resolution and crop with the assumption that the file can be saved.
+
+## Software license
+
+License products generate recoverable serials after payment. Configure a serial pattern, duration, maximum activations, and publication state. Applications can verify, activate, deactivate, and send heartbeat requests to the store-scoped API with configurable headers and HMAC signatures.
+
+License products appear in the same storefront and cart as media. Administrators manage issued keys, activations, audit events, and manual issuance from the unified **License keys** tab.
+
+## Choosing a delivery mode
+
+Choose the least permissive delivery that satisfies the product:
+
+| Customer need | Suggested mode |
+| --- | --- |
+| One-time archive | Download |
+| Ebook used across devices | Browser read and download |
+| Album or podcast | Stream and download |
+| Course consumed online | Stream |
+| Stock footage supplied to editors | Download |
+| Photo pack or design assets | Download |
+| Desktop application | Generated license |
+
+Next, configure the selected format in the [Product editor](/docs/product-editor).

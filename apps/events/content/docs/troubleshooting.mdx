@@ -1,0 +1,67 @@
+---
+title: Testing and troubleshooting
+description: Diagnose installation, checkout, delivery, wallet, scanner, analytics, and custom-domain problems.
+section: Security and support
+order: 18
+---
+
+Test the complete journey on a non-production or low-value event before opening sales. Capture the BTCPay Server log, plugin version, store ID, event slug, approximate time, and safe reproduction steps when asking for help. Never publish protected links, ticket codes, API keys, wallet credentials, or customer data in an issue.
+
+## Plugin does not load
+
+Confirm BTCPay Server is version 2.3.5 or newer and that the installed `.btcpay` artifact matches the intended release. Restart the server once and inspect startup logs for dependency or Razor compilation errors.
+
+If upgrading, verify that every file in the old plugin directory was replaced together. A mixture of assemblies and views from different versions is not supported.
+
+## Checkout does not open
+
+- Confirm the BTCPay store can create a normal invoice.
+- Check that `/modal/btcpay.js` loads from the same BTCPay origin and root path.
+- Inspect the browser console for a blocked script or strict proxy content-security policy.
+- Use the protected payment fallback link if the modal cannot initialize.
+
+Do not place an API key in browser code as a workaround.
+
+## Reservation ended during payment
+
+Open the linked BTCPay invoice before taking action. A detected or partially paid payment can wait for confirmation after the customer-facing timer ends or the modal closes. The plugin should keep that customer in a pending payment state rather than releasing an active payment as ordinary expiry.
+
+For a truly unpaid ended reservation, use **Rebuy** or start a new selection. Current price and inventory rules apply.
+
+## Email not sent
+
+For SMTP, send a store-level test and review server connection or authentication errors. For Resend, confirm the API key, verified sender domain, and provider delivery log. Then inspect the order detail's delivery state before retrying.
+
+## Wallet action fails
+
+Apple failures commonly come from a mismatched Pass Type Identifier, expired certificate, or incorrect `.p12` password. Google failures commonly come from an unauthorized service account, wrong issuer ID, or missing Generic Pass class.
+
+The protected order page and PDF should remain available as fallback delivery.
+
+## Scanner cannot access the camera
+
+Camera APIs require HTTPS and browser permission. Check the OS-level camera permission, close another app using the camera, and try the saved-image or manual-entry fallback. If the scanner session is unauthorized, open a current share link; a rotated link intentionally invalidates old sessions.
+
+## Ticket is valid but cannot check in
+
+Confirm the scanner belongs to the same event. Review current inside state and entrance history. When ID review is required, record a confirmed decision before check-in. A rejected decision intentionally prevents admission.
+
+## Analytics is empty
+
+Verify consent, Do Not Track, the selected provider, and the ID format. For GTM, trigger page measurement from MakePay's `page_view` event instead of an automatic All Pages trigger. Inspect `window.dataLayer` for the normalized event before debugging Google delivery.
+
+## Custom domain fails
+
+Check DNS resolution, certificate status, `BTCPAY_ADDITIONAL_HOSTS`, the exact domain-mapping row, and the App selected by that row. Do not include a scheme or path in the hostname. A host already mapped to another App cannot simultaneously map to Event Tickets.
+
+## Report a reproducible issue
+
+Use the [GitHub issue tracker](https://github.com/makepay-io/btcpayserver-event-tickets/issues). Include:
+
+1. BTCPay Server and plugin versions.
+2. Deployment type and root-path or proxy details.
+3. Expected and actual behavior.
+4. Minimal safe steps to reproduce.
+5. Sanitized server or browser errors.
+
+Redact emails, names, phone numbers, order capabilities, scanner links, ticket QR values, invoice IDs, and all credentials.

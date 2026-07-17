@@ -1,0 +1,62 @@
+---
+title: Installation
+description: Install the signed plugin package, restart BTCPay Server, verify the store integration, and create the initial storefront.
+section: Getting started
+order: 3
+---
+
+## Install from Plugin Builder
+
+The simplest path is the public [MakePay Digital Products listing](https://plugin-builder.btcpayserver.org/public/plugins/makepay-digital-products). Confirm that the listed repository is `makepay-io/btcpayserver-digital-products` and select the release compatible with your BTCPay Server.
+
+Follow the Plugin Builder installation instructions for your deployment. A BTCPay Server administrator must install plugins and restart the server; a store owner alone cannot modify the server plugin directory.
+
+After restart, open a store and confirm that **Digital Products** appears under **Plugins** or **Store → Integrations**. The plugin should report its installed version in the BTCPay plugin list.
+
+## Install a GitHub release
+
+Signed release artifacts are published in the [GitHub repository](https://github.com/makepay-io/btcpayserver-digital-products/releases). Download the `.btcpay` artifact for the selected version and verify any checksum supplied with the release.
+
+Back up the BTCPay data directory before replacing an existing plugin. Stop or restart BTCPay in the manner recommended for your deployment, install the extracted plugin folder in the configured plugin directory, and start the service again.
+
+Do not mix assemblies from multiple versions in the same plugin directory. A clean replacement avoids stale DLLs surviving an upgrade.
+
+## Build from source
+
+For development or independent verification:
+
+```bash
+git clone https://github.com/makepay-io/btcpayserver-digital-products.git
+cd btcpayserver-digital-products
+git submodule update --init --recursive
+dotnet test tests/BTCPayServer.Plugins.MakePay.DigitalProducts.Tests/BTCPayServer.Plugins.MakePay.DigitalProducts.Tests.csproj -c Release
+dotnet publish src/BTCPayServer.Plugins.MakePay.DigitalProducts/BTCPayServer.Plugins.MakePay.DigitalProducts.csproj -c Release
+```
+
+Install only the published output. Keep the repository and build environment outside the production plugin directory.
+
+## First-run setup
+
+Open **Digital Products → Store settings** and complete these items before publishing:
+
+1. Set the storefront name, description, currency, logo, and favicon.
+2. Choose whether delivery unlocks at BTCPay `Processing` or only after settlement. Settled delivery is the safer default.
+3. Configure the passwordless code lifetime and customer session duration.
+4. Verify BTCPay SMTP if customer access or email delivery is enabled.
+5. Review local, S3-compatible, or custom-origin storage requirements.
+6. Open the live editor, create the public category structure, and check desktop and mobile previews.
+7. Create a low-value test product and complete a real invoice lifecycle.
+
+## Verification checklist
+
+Verify all of the following on the public storefront:
+
+- the product detail and preview load without an administrator session;
+- adding to cart does not reload the whole page;
+- the BTCPay checkout opens through the JavaScript modal;
+- the paid order appears in the admin dashboard and has a detail page;
+- the buyer can use the emailed code to open the private library;
+- a protected file or stream works, then records usage;
+- a revoked or expired link is denied without revealing its source.
+
+Continue with [Product formats](/docs/product-types) to build the catalog.

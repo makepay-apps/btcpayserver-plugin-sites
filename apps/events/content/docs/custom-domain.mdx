@@ -1,0 +1,43 @@
+---
+title: Custom domain setup
+description: Map a dedicated hostname to the Event Tickets App using BTCPay's native domain mapping.
+section: Operations
+order: 16
+---
+
+The plugin works at its default store-scoped path and can also use BTCPay Server's native App domain mapping for clean URLs such as `https://tickets.example.com/events/my-event`.
+
+## What code can and cannot do
+
+The plugin generates clean routes and preserves them across checkout, invoice return metadata, email, PDFs, wallets, rebuy, status polling, and scanner links. It cannot control public DNS, obtain a certificate for a hostname that does not point to the server, or change the server operator's reverse proxy.
+
+DNS and TLS therefore require the domain owner or BTCPay server operator.
+
+## Create the App identity
+
+1. In Event Tickets settings, choose **Create Event Tickets App**.
+2. Give the App a clear name.
+3. As a server administrator, open **Server Settings → Policies → Domain mapping**.
+4. Map the exact canonical ASCII hostname to that App.
+
+Do not include a scheme, port, path, whitespace, or trailing dot. Use punycode for an internationalized hostname. Remove duplicate or conflicting hostname rows because BTCPay resolves the first exact match.
+
+## Configure the hostname
+
+Point the chosen DNS record to the BTCPay Server. For BTCPay Docker deployments, retain every existing hostname when adding the new value to `BTCPAY_ADDITIONAL_HOSTS`, then rerun the standard setup script.
+
+Verify DNS before requesting a certificate. An unresolved additional hostname can interfere with Let's Encrypt renewal for other configured names.
+
+> `BTCPAY_ADDITIONAL_HOSTS` aliases the entire BTCPay Server, not only one store. It is a routing hostname, not store isolation.
+
+## Route behavior
+
+The mapped root redirects to `/events`. Installations below a root path preserve it, for example `/btcpay/events`. Safe GET and HEAD requests on legacy store routes may canonicalize to the mapped hostname, while submitted POST requests stay on their original origin to avoid unsafe cross-host form replay.
+
+Onion requests never canonicalize to a clearnet mapping. Checkout records its origin intent so protected returns and email links remain on the intended origin.
+
+## Reverse-proxy alternative
+
+If an apex domain already serves another website, that site's proxy or CDN must deliberately forward `/events` and every nested public route to BTCPay. A dedicated subdomain is usually safer and easier to test.
+
+Use separate hostnames when Event Tickets and Digital Products both need native clean URLs, because BTCPay maps one hostname to one App.

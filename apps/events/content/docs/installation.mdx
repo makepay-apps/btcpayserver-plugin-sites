@@ -1,0 +1,51 @@
+---
+title: Installation
+description: Install the signed plugin, confirm compatibility, and prepare a BTCPay store for ticketing.
+section: Getting started
+order: 2
+---
+
+MakePay Event Tickets requires BTCPay Server 2.3.5 or newer and is installed at server level. Each BTCPay store then receives its own isolated settings, events, orders, and admission data.
+
+## Install from the plugin builder
+
+1. Sign in as a BTCPay Server administrator.
+2. Open **Manage Plugins**.
+3. Find **MakePay Event Tickets** in the plugin builder catalog.
+4. Review the release version and compatibility condition.
+5. Install the plugin and restart BTCPay Server when prompted.
+
+Use the public [plugin builder listing](https://plugin-builder.btcpayserver.org/public/plugins/makepay-event-tickets) to inspect the current package. Source and signed releases are also available on [GitHub](https://github.com/makepay-io/btcpayserver-event-tickets).
+
+## Install from a release artifact
+
+Server operators who manage plugins manually can download the `.btcpay` artifact from a tagged GitHub release. Verify that the artifact belongs to the intended release and follow the standard BTCPay custom-plugin deployment procedure for the installation method used by your server.
+
+Do not copy source files into the live plugin directory. Use the packaged artifact so Razor views, dependencies, static assets, and plugin metadata remain synchronized.
+
+## Verify the installation
+
+After restart:
+
+- Confirm **Event Tickets** appears in the store's plugin navigation.
+- Open the dashboard and settings without errors.
+- Create a draft event and confirm its public preview.
+- Check the BTCPay server log for the loaded MakePay Event Tickets version.
+
+The plugin is store-scoped: a user must have access to the selected BTCPay store to administer its events and orders.
+
+## Prepare payment methods
+
+Event Tickets uses the payment methods enabled by the BTCPay store. Configure and test the store wallets before launching ticket sales. The plugin does not hold funds, convert currencies, or replace BTCPay's invoice and payment-method configuration.
+
+## Upgrade safely
+
+Before an upgrade:
+
+1. Back up the BTCPay Server data volume and database using the deployment's normal process.
+2. Record the currently installed plugin version.
+3. Review the release notes for schema or behavior changes.
+4. Install the new signed artifact and restart once.
+5. Test an event page, an admin order, and a scanner session.
+
+Never downgrade a production database unless the release documentation explicitly confirms compatibility. If an upgrade fails, capture the server log and see [Testing and troubleshooting](/docs/troubleshooting).

@@ -1,0 +1,45 @@
+---
+title: Apple and Google Wallet
+description: Configure signed wallet passes, protect signing credentials, and validate customer delivery.
+section: Ticket delivery
+order: 10
+---
+
+Wallet delivery is optional. When configured, the protected order page can offer an Apple Wallet `.pkpass` download and a Google Wallet save link for each eligible ticket.
+
+## Apple Wallet requirements
+
+Apple Wallet requires:
+
+- An Apple Pass Type Identifier.
+- The Apple Team Identifier.
+- A Pass Type signing certificate exported as `.p12`.
+- The password for that certificate, when present.
+
+Use a certificate created for the same Pass Type Identifier entered in settings. An unrelated website or distribution certificate cannot sign a valid pass.
+
+## Google Wallet requirements
+
+Google Wallet requires:
+
+- A Google Wallet issuer ID.
+- An existing Generic Pass class ID.
+- Service-account JSON authorized for that issuer.
+
+The plugin creates a signed save link; it does not create or approve the issuer account. Complete Google's issuer onboarding and class configuration first.
+
+## Credential protection
+
+Wallet certificates, passwords, and service-account material are server secrets. The plugin protects stored values using BTCPay Server data protection and never sends raw credentials to public pages.
+
+Restrict access to Event Tickets settings to trusted store administrators. Rotate a credential in its issuing platform if it is ever disclosed.
+
+## Validation checklist
+
+- Save an Apple pass on a physical iPhone, not only a desktop preview.
+- Open the Google save link with an authorized test account.
+- Confirm event times, venue, attendee name, and barcode.
+- Scan the wallet barcode with the event-specific scanner.
+- Test a renewed or replacement credential before the old one expires.
+
+Wallet failure should not block access to the protected order page or PDF. Keep the PDF as a dependable fallback and document any device requirements for attendees.
