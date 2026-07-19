@@ -15,7 +15,7 @@ import type { SiteConfig } from "@makepay/site-kit";
 export const domain = "events.makepay.io";
 export const productName = "MakePay Event Tickets";
 export const githubHref = "https://github.com/makepay-io/btcpayserver-event-tickets";
-export const pluginBuilderHref = "https://plugin-builder.btcpayserver.org/public/plugins/makepay-event-tickets";
+export const pluginBuilderHref = "https://plugin-builder.btcpayserver.org/public/plugins/makepay-events";
 
 export const siteDescription =
   "A self-hosted event storefront, checkout, ticket delivery, point-of-sale, and QR admission system built directly into BTCPay Server.";

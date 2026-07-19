@@ -19,11 +19,11 @@ export default function OpenGraphImage() {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 15, fontSize: 27, fontWeight: 700 }}>
-        <svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
-          <path
-            fill="#a685f4"
-            d="M16 0 19.6 12.4 32 16l-12.4 3.6L16 32l-3.6-12.4L0 16l12.4-3.6L16 0Z"
-          />
+        <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3.25 6.25h17.5v3a2.75 2.75 0 0 0 0 5.5v3H3.25v-3a2.75 2.75 0 0 0 0-5.5v-3Z" fill="none" stroke="#f8f7fa" strokeWidth="1.75" strokeLinejoin="round" />
+          <path d="M12 7.75v1.5m0 2v1.5m0 2v1.5" fill="none" stroke="#51b13e" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M6.75 9h2.5v2.5h-2.5zm0 4h2.5v2.5h-2.5zm8-4h2.5v2.5h-2.5z" fill="none" stroke="#51b13e" strokeWidth="1.25" strokeLinejoin="round" />
+          <path d="M14.75 13.25H16v1.25h-1.25zm2 0H18v1.25h-1.25zm0 2H18v1.25h-1.25z" fill="#f8f7fa" />
         </svg>
         <span>MakePay</span>
         <span style={{ width: 1, height: 30, background: "rgba(255,255,255,.2)" }} />

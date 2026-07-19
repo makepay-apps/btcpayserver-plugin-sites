@@ -32,7 +32,7 @@ export const siteConfig: SiteConfig = {
   docsHref: "/docs",
   githubHref: "https://github.com/makepay-io/btcpayserver-digital-products",
   pluginBuilderHref:
-    "https://plugin-builder.btcpayserver.org/public/plugins/makepay-digital-products",
+    "https://plugin-builder.btcpayserver.org/public/plugins/makepay-digital-downloads",
   metrics: [
     { value: "6", label: "digital product formats" },
     { value: "3", label: "protected storage sources" },
