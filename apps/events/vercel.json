@@ -1,4 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "if [ ! -f package-lock.json ]; then cd ../..; fi && test \"$(node -p \"require('./package.json').name\")\" = \"btcpayserver-plugin-sites\" && node --version && test \"$(npx --yes --ignore-scripts --package=npm@11.21.2 npm --version)\" = \"11.21.2\" && npx --yes --ignore-scripts --package=npm@11.21.2 npm ci --ignore-scripts --no-audit --no-fund"
+  "installCommand": "if [ -f scripts/vercel-install.sh ]; then sh scripts/vercel-install.sh; else sh ../../scripts/vercel-install.sh; fi"
 }
