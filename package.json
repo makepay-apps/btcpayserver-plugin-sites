@@ -13,18 +13,23 @@
     "build:events": "npm run build --workspace @makepay/events-site",
     "build:downloads": "npm run build --workspace @makepay/downloads-site",
     "lint": "npm run lint --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test:dependencies": "node --test scripts/dependency-upgrade.test.mjs"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^22.23.5 || ^24.22.3"
   },
   "overrides": {
-    "postcss": "^8.5.10"
+    "postcss": "8.5.23",
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.8"
+    },
+    "next": "15.5.29"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
     "eslint": "^9.39.1",
-    "eslint-config-next": "^15.5.9",
-    "postcss": "^8.5.10"
+    "eslint-config-next": "15.5.29",
+    "postcss": "8.5.23"
   }
 }
